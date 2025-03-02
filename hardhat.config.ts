@@ -96,11 +96,23 @@ const userConfig: HardhatUserConfig = {
     },
     networks: {
         hardhat: {
+            forking: {
+                enabled: true,
+                url: `https://eth-sepolia.g.alchemy.com/v2/iPtkGoOcSXwb8SuqheUJkGoVNUkgSvhA`,
+            },
             allowUnlimitedContractSize: true,
             blockGasLimit: 100000000,
             gas: 100000000,
             zksync: HARDHAT_ENABLE_ZKSYNC === "1",
             chainId: typeof HARDHAT_CHAIN_ID === "string" && !Number.isNaN(parseInt(HARDHAT_CHAIN_ID)) ? parseInt(HARDHAT_CHAIN_ID) : 31337,
+        },
+        sepolia: {
+            ...sharedNetworkConfig,
+            url: `https://eth-sepolia.g.alchemy.com/v2/iPtkGoOcSXwb8SuqheUJkGoVNUkgSvhA`,
+        },
+        holesky: {
+            ...sharedNetworkConfig,
+            url: `https://eth-holesky.g.alchemy.com/v2/iPtkGoOcSXwb8SuqheUJkGoVNUkgSvhA`,
         },
         mainnet: {
             ...sharedNetworkConfig,

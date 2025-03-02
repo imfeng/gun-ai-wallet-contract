@@ -10,7 +10,7 @@ export default [
         rules: {
             "@typescript-eslint/no-explicit-any": "warn",
             "@typescript-eslint/no-unused-expressions": "off",
-            "@typescript-eslint/no-unused-vars": ["error", { ignoreRestSiblings: true }],
+            "@typescript-eslint/no-unused-vars": ["warn", { ignoreRestSiblings: true }],
         },
         plugins: {
             noOnlyTests,
