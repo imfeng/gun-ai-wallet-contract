@@ -198,6 +198,18 @@ export const executeTx = async (
     overrides?: PayableOverrides,
 ): Promise<ethers.ContractTransactionResponse> => {
     const signatureBytes = buildSignatureBytes(signatures);
+    console.log({
+        to: safeTx.to,
+        value: safeTx.value,
+        data: safeTx.data,
+        operation: safeTx.operation,
+        safeTxGas: safeTx.safeTxGas,
+        baseGas: safeTx.baseGas,
+        gasPrice: safeTx.gasPrice,
+        gasToken: safeTx.gasToken,
+        refundReceiver: safeTx.refundReceiver,
+        signatureBytes,
+    });
     return safe.execTransaction(
         safeTx.to,
         safeTx.value,

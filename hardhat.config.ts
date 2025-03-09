@@ -31,6 +31,7 @@ const {
     SOLIDITY_SETTINGS,
     HARDHAT_ENABLE_ZKSYNC = "0",
     HARDHAT_CHAIN_ID = 31337,
+    ALCHEMY_API_KEY,
 } = process.env;
 
 const DEFAULT_MNEMONIC = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
@@ -54,9 +55,10 @@ import "./src/tasks/show_codesize";
 import { BigNumber } from "@ethersproject/bignumber";
 import { DeterministicDeploymentInfo } from "hardhat-deploy/dist/types";
 
-const defaultSolidityVersion = "0.7.6";
+const defaultSolidityVersion = "0.8.27"; // "0.7.6";
 const primarySolidityVersion = SOLIDITY_VERSION || defaultSolidityVersion;
 const soliditySettings = SOLIDITY_SETTINGS ? JSON.parse(SOLIDITY_SETTINGS) : undefined;
+const alchemyApiKey = ALCHEMY_API_KEY;
 
 const deterministicDeployment = (network: string): DeterministicDeploymentInfo => {
     const info = getSingletonFactoryInfo(parseInt(network));
@@ -84,6 +86,8 @@ const userConfig: HardhatUserConfig = {
     typechain: {
         outDir: "typechain-types",
         target: "ethers-v6",
+        alwaysGenerateOverloads: true,
+        dontOverrideCompile: false,
     },
     solidity: {
         compilers: [{ version: primarySolidityVersion, settings: soliditySettings }, { version: defaultSolidityVersion }],
@@ -98,7 +102,7 @@ const userConfig: HardhatUserConfig = {
         hardhat: {
             forking: {
                 enabled: true,
-                url: `https://eth-sepolia.g.alchemy.com/v2/iPtkGoOcSXwb8SuqheUJkGoVNUkgSvhA`,
+                url: `https://eth-sepolia.g.alchemy.com/v2/${alchemyApiKey}`,
             },
             allowUnlimitedContractSize: true,
             blockGasLimit: 100000000,
@@ -108,11 +112,11 @@ const userConfig: HardhatUserConfig = {
         },
         sepolia: {
             ...sharedNetworkConfig,
-            url: `https://eth-sepolia.g.alchemy.com/v2/iPtkGoOcSXwb8SuqheUJkGoVNUkgSvhA`,
+            url: `https://eth-sepolia.g.alchemy.com/v2/${alchemyApiKey}`,
         },
         holesky: {
             ...sharedNetworkConfig,
-            url: `https://eth-holesky.g.alchemy.com/v2/iPtkGoOcSXwb8SuqheUJkGoVNUkgSvhA`,
+            url: `https://eth-holesky.g.alchemy.com/v2/${alchemyApiKey}`,
         },
         mainnet: {
             ...sharedNetworkConfig,

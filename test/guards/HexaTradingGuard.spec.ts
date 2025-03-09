@@ -15,6 +15,7 @@ import { buildMultiSendSafeTx, encodeMultiSend } from "../../src/utils/multisend
 
 const uniswapV2Router = "0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3";
 const uniswapV2Factory = "0xF62c03E08ada871A0bEb309762E260a7a6a880E6";
+const odosRouter = "0x0000000000000000000000000000000000000000";
 describe("HexaTradingGuard", () => {
     const setupTests = deployments.createFixture(async ({ deployments }) => {
         await deployments.fixture();
@@ -26,7 +27,7 @@ describe("HexaTradingGuard", () => {
 
         const useGuard = async () => {
             const guardFactory = (await hre.ethers.getContractFactory("HexaTradingGuard")).connect(user1);
-            const guard = await guardFactory.deploy(uniswapV2Router, safeAddress, user1.address);
+            const guard = await guardFactory.deploy(uniswapV2Router, odosRouter, safeAddress, user1.address);
             const guardAddress = await guard.getAddress();
             await executeContractCallWithSigners(safe, safe, "setGuard", [guardAddress], [user1]);
             return {
@@ -49,8 +50,6 @@ describe("HexaTradingGuard", () => {
 
         const uniswapFactory = await hre.ethers.getContractAt("IUniswapV2Factory", uniswapV2Factory);
         const uniswapRouter = await hre.ethers.getContractAt("IUniswapV2Router02", uniswapV2Router);
-        const pairTx = await uniswapFactory.createPair(token1Address, token2Address);
-        const pairReceipt = await pairTx.wait();
         const pairAddress = await uniswapFactory.getPair(token1Address, token2Address);
         const pair = await hre.ethers.getContractAt("IUniswapV2Pair", pairAddress);
 
@@ -92,16 +91,9 @@ describe("HexaTradingGuard", () => {
     describe("general", () => {
         it("uniswap working", async () => {
             const {
-                safe,
-                mock,
                 signers: [user1],
-                token1,
-                token2,
                 token1Address,
                 token2Address,
-                addLiquidityReceipt,
-                pair,
-                pairAddress,
                 uniswapRouter,
             } = await setupTests();
 
@@ -140,15 +132,11 @@ describe("HexaTradingGuard", () => {
             const {
                 safe,
                 safeAddress,
-                mock,
                 signers: [user1],
                 token1,
                 token2,
                 token1Address,
                 token2Address,
-                addLiquidityReceipt,
-                pair,
-                pairAddress,
                 uniswapRouter,
             } = await setupTests();
 
@@ -185,15 +173,11 @@ describe("HexaTradingGuard", () => {
                 useGuard,
                 safe,
                 safeAddress,
-                mock,
                 signers: [user1],
                 token1,
                 token2,
                 token1Address,
                 token2Address,
-                addLiquidityReceipt,
-                pair,
-                pairAddress,
                 uniswapRouter,
             } = await setupTests();
             const { guard, guardAddress } = await useGuard();
@@ -248,15 +232,11 @@ describe("HexaTradingGuard", () => {
                 useGuard,
                 safe,
                 safeAddress,
-                mock,
                 signers: [user1],
                 token1,
                 token2,
                 token1Address,
                 token2Address,
-                addLiquidityReceipt,
-                pair,
-                pairAddress,
                 uniswapRouter,
                 multiSend,
             } = await setupTests();

@@ -1,16 +1,24 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity >=0.8.0 <0.9.0;
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IUniswapV2Router02, IUniswapV2Router02Selectors} from "./../../interfaces/uniswap/IUniswapV2Router02.sol";
+import {IOdosRouterV2, IOdosRouterV2Selectors} from "../../interfaces/odos/IOdosRouterV2.sol";
 import {Enum} from "./../../libraries/Enum.sol";
 import {BaseGuard} from "./BaseGuard.sol";
+import {BaseTransactionGuard, ITransactionGuard} from "./../../base/GuardManager.sol";
+import {BaseModuleGuard, IModuleGuard} from "./../../base/ModuleManager.sol";
+import {IERC165} from "./../../interfaces/IERC165.sol";
+
+
+// BaseTransactionGuard
 
 contract HexaTradingGuard is BaseGuard, AccessControl {
     bytes32 public constant OWNER_ROLE = keccak256("OWNER_ROLE");
     bytes32 public constant TRADER_ROLE = keccak256("TRADER_ROLE");
 
     address public immutable uniswapRouterAddress;
+    address public immutable odosRouterAddress;
     address public safe;
 
     struct WhitelistInfo {
@@ -24,8 +32,9 @@ contract HexaTradingGuard is BaseGuard, AccessControl {
     // Events
     event TokenWhitelistUpdated(address indexed token, bool enabled, uint256 dailyLimitAmount);
 
-    constructor(address _uniswapRouter, address _safe, address _initialOwner) {
+    constructor(address _uniswapRouter, address _odosRouter, address _safe, address _initialOwner) {
         uniswapRouterAddress = _uniswapRouter;
+        odosRouterAddress = _odosRouter;
         safe = _safe;
 
         // Setup roles
@@ -113,6 +122,26 @@ contract HexaTradingGuard is BaseGuard, AccessControl {
     ) external view override {
         // Skip checks for empty transactions or other operations
         if (operation == Enum.Operation.DelegateCall || data.length < 4) return;
+
+        if (to == odosRouterAddress) {
+            // Check trader permission for Uniswap interactions
+            bool isTraderSigned = checkSignedByRole(signatures, TRADER_ROLE);
+            require(isTraderSigned, "Trading requires Trader role signature");
+
+            // if (matchFunctionSelector(data, IOdosRouterV2Selectors.swap)) {
+            //     IOdosRouterV2.swapTokenInfo memory tokenInfo;
+            //     bytes memory remainingData;
+            //     address someAddress;
+            //     uint32 someUint32;
+            //     (tokenInfo, remainingData, someAddress, someUint32) = abi.decode(data[4:], (IOdosRouterV2.swapTokenInfo, bytes, address, uint32));
+
+            //     require(whitelists[tokenInfo.inputToken].enabled, "Input token not whitelisted");
+            //     require(whitelists[tokenInfo.outputToken].enabled, "Output token not whitelisted");
+                
+                
+            //     return;
+            // }
+        }
 
         // Check if this is a Uniswap swap
         if (to == uniswapRouterAddress) {
@@ -203,13 +232,10 @@ contract HexaTradingGuard is BaseGuard, AccessControl {
         revokeRole(OWNER_ROLE, owner);
     }
 
-    // /**
-    //  * @inheritdoc IERC165
-    //  */
-    // function supportsInterface(bytes4 interfaceId) external view virtual override(BaseTransactionGuard, BaseModuleGuard) returns (bool) {
-    //     return
-    //         interfaceId == type(ITransactionGuard).interfaceId || // 0xe6d7a83a
-    //         interfaceId == type(IModuleGuard).interfaceId || // 0x58401ed8
-    //         interfaceId == type(IERC165).interfaceId; // 0x01ffc9a7
-    // }
+    function supportsInterface(bytes4 interfaceId) public view virtual override(BaseGuard, AccessControl) returns (bool) {
+        return
+            interfaceId == type(ITransactionGuard).interfaceId || // 0xe6d7a83a
+            interfaceId == type(IModuleGuard).interfaceId || // 0x58401ed8
+            interfaceId == type(IERC165).interfaceId; // 0x01ffc9a7
+    }
 }

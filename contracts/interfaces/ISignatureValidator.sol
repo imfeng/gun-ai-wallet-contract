@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LGPL-3.0-only
 /* solhint-disable one-contract-per-file */
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity >=0.8.0 <0.9.0;
 
 contract ISignatureValidatorConstants {
     // bytes4(keccak256("isValidSignature(bytes32,bytes)")

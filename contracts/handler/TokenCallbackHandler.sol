@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LGPL-3.0-only
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity >=0.8.0 <0.9.0;
 
 import {ERC1155TokenReceiver} from "../interfaces/ERC1155TokenReceiver.sol";
 import {ERC721TokenReceiver} from "../interfaces/ERC721TokenReceiver.sol";

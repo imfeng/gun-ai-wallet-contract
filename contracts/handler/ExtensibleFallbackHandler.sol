@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LGPL-3.0-only
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity >=0.8.0 <0.9.0;
 
 import {ERC165Handler} from "./extensible/ERC165Handler.sol";
 import {IFallbackHandler, FallbackHandler} from "./extensible/FallbackHandler.sol";

@@ -34,7 +34,7 @@
         "lint:fix": "npm run lint:sol:fix && npm run lint:ts:fix",
         "lint:sol": "solhint 'contracts/**/*.sol'",
         "lint:sol:fix": "solhint --fix 'contracts/**/*.sol' --noPrompt",
-        "lint:sol:prettier": "prettier 'contracts/**/*.sol' --list-different",
+        "lint:sol:prettier": "prettier 'contracts/**/*.sol' --list-different --write",
         "lint:ts": "eslint 'src/**/*.ts' 'test/**/*.ts'",
         "lint:ts:fix": "eslint 'src/**/*.ts' 'test/**/*.ts' --fix",
         "lint:ts:prettier": "prettier 'src/**/*.ts' 'test/**/*.ts' --list-different",
@@ -66,7 +66,7 @@
         "@matterlabs/hardhat-zksync-solc": "^1.2.5",
         "@matterlabs/hardhat-zksync-verify": "^1.7.1",
         "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-        "@openzeppelin/contracts": "^3.4.0",
+        "@openzeppelin/contracts": "^4.9.6",
         "@safe-global/mock-contract": "^4.1.0",
         "@safe-global/safe-singleton-factory": "^1.0.33",
         "@types/chai": "^4.3.19",
@@ -94,5 +94,8 @@
         "typescript-eslint": "^8.4.0",
         "yargs": "^17.7.2",
         "zksync-ethers": "6.15.3"
+    },
+    "dependencies": {
+        "typechain": "^8.3.2"
     }
 }
