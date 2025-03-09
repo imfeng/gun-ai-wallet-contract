@@ -14,10 +14,12 @@ interface IOdosRouterV2 {
         address outputReceiver;
     }
 
-    function swap(swapTokenInfo memory tokenInfo, bytes calldata pathDefinition, address executor, uint32 referralCode)
-        external
-        payable
-        returns (uint256 amountOut);
+    function swap(
+        swapTokenInfo memory tokenInfo,
+        bytes calldata pathDefinition,
+        address executor,
+        uint32 referralCode
+    ) external payable returns (uint256 amountOut);
 }
 
 /**
@@ -31,19 +33,18 @@ contract OdosV2Adapter {
         router = IOdosRouterV2(router_);
     }
 
-    function _swap(IERC20 tokenIn, IERC20 tokenOut, uint256 amountIn, bytes memory swapData)
-        internal
-        virtual
-        returns (uint256 tokenOutAmt)
-    {
+    function _swap(
+        IERC20 tokenIn,
+        IERC20 tokenOut,
+        uint256 amountIn,
+        bytes memory swapData
+    ) internal virtual returns (uint256 tokenOutAmt) {
         IERC20(tokenIn).approve(address(router), amountIn);
 
-        (
-            IOdosRouterV2.swapTokenInfo memory tokenInfo,
-            bytes memory pathDefinition,
-            address executor,
-            uint32 referralCode
-        ) = abi.decode(swapData, (IOdosRouterV2.swapTokenInfo, bytes, address, uint32));
+        (IOdosRouterV2.swapTokenInfo memory tokenInfo, bytes memory pathDefinition, address executor, uint32 referralCode) = abi.decode(
+            swapData,
+            (IOdosRouterV2.swapTokenInfo, bytes, address, uint32)
+        );
 
         require(tokenInfo.outputToken == address(tokenOut), "INVALID_OUTPUT_TOKEN");
         /**

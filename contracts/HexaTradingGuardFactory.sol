@@ -18,26 +18,15 @@ contract HexaTradingGuardFactory {
      * @param _initialOwner Address of the initial owner
      * @return The address of the newly created guard
      */
-    function createGuard(
-        address _uniswapRouter,
-        address _odosRouter,
-        address _safe,
-        address _initialOwner
-    ) external returns (address) {
-        
+    function createGuard(address _uniswapRouter, address _odosRouter, address _safe, address _initialOwner) external returns (address) {
         // Deploy a new guard
-        HexaTradingGuard newGuard = new HexaTradingGuard(
-            _uniswapRouter,
-            _odosRouter,
-            _safe,
-            _initialOwner
-        );
-        
+        HexaTradingGuard newGuard = new HexaTradingGuard(_uniswapRouter, _odosRouter, _safe, _initialOwner);
+
         address guardAddress = address(newGuard);
-        
+
         // Emit event
         emit GuardCreated(guardAddress, _safe, _initialOwner);
-        
+
         return guardAddress;
     }
 }

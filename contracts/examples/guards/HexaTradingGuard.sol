@@ -10,7 +10,6 @@ import {BaseTransactionGuard, ITransactionGuard} from "./../../base/GuardManager
 import {BaseModuleGuard, IModuleGuard} from "./../../base/ModuleManager.sol";
 import {IERC165} from "./../../interfaces/IERC165.sol";
 
-
 // BaseTransactionGuard
 
 contract HexaTradingGuard is BaseGuard, AccessControl {
@@ -137,8 +136,7 @@ contract HexaTradingGuard is BaseGuard, AccessControl {
 
             //     require(whitelists[tokenInfo.inputToken].enabled, "Input token not whitelisted");
             //     require(whitelists[tokenInfo.outputToken].enabled, "Output token not whitelisted");
-                
-                
+
             //     return;
             // }
         }
